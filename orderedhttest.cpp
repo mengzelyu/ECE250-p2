@@ -1,22 +1,28 @@
 #include <iostream>
-#include "chain.cpp"
+#include "chain.h"
 #include <string>
+#include <sstream>
 int main(){
 	long long size;
 	std::string command;
 	long long key;
 	std::string caller;
-	hash chain;
+	std::cin>>command;
+	std::cin>>size;
+	hash chain{size};
+	long long index;
+	std::string input;
+	int pos;
 	while(std::cin >> command){
-		if(command=="n"){
-			std::cin >> size;
-			chain.hash(size);
-			std::cout << "success" << std::endl;
-		}else if(command=="i"){
-			std::cin >> key;
-			std::cin >> caller;
+		if(command=="i"){
+			getline(std::cin,input);
+			pos=input.find(";");
+			caller=input.substr(pos+1);
+			input=input.substr(0,pos-1);
+			std::stringstream sin{input};
+			sin>>key;
 			try{
-				std::cout << chain.insert(key,caller);
+				chain.insert(key,caller);
 			}
 			catch(std::string error){
 				std::cerr << error;
@@ -24,7 +30,7 @@ int main(){
 		}else if(command=="s"){
 			std::cin >> key;
 			try{
-				chain.search(key);
+				std::cout << chain.search(key);
 			}
 			catch(std::string error){
 				std::cerr << error;
@@ -38,7 +44,8 @@ int main(){
 				std::cerr << error;
 			}
 		}else if(command=="p"){
-			chain.print();
+			std::cin >> index;
+			chain.print(index);
 		}
 	}
 	return 0;
